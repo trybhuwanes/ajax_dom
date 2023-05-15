@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="asset/css/bootstrap.min.css">
+  <link rel="stylesheet" href="asset/js/bootstrap.min.js">
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</head>
+
+<body>
+  <form id="myForm">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table">
+            <tr>
+              <td><label for="teks">Teks:</label></td>
+              <td><input type="text" name="teks" id="teks"></td>
+            </tr>
+            <tr>
+              <td><label for="angka">Angka:</label></td>
+              <td><input type="number" name="angka" id="angka"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <br>
+  <br>
+  <div id="result"></div>
+  <div class="container">
+    <table id="table" border="1">
+      <thead>
+        <tr>
+          <th width="50%">Name</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</body>
+<script>
+  $(document).ready(function () {
+    $('#myForm').submit(function (e) {
+      e.preventDefault(); // prevent default form submission
+      $.ajax({
+        url: 'execute.php', // URL to submit the form data
+        type: 'POST',
+        data: $('#myForm').serialize(), // serialize form data
+        dataType: 'JSON',
+        success: function (response) {
+          // $('#result').html(response); // display response in a div with id "result"
+          var name = JSON.parse(JSON.stringify(response));
+          for (var i = 0; i < response.length; i++) {
+            var tr_str =
+              "<tr>" +
+              "<td align='center'>" + name[i] + "</td>" +
+              "</tr>";
+
+            $("#table tbody").append(tr_str);
+          }
+          $("#table")
+            .animate({ width: "90%" }, 1000)
+            .animate({ fontSize: "24px" }, 1000)
+            .animate({ borderLeftWidth: "15px" }, 1000);
+        },
+        error: function (xhr, status, error) {
+          console.log(xhr.responseText); // log error message
+        }
+      });
+    });
+  });
+</script>
+
+</html>
